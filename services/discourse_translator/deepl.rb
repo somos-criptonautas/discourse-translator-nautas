@@ -5,7 +5,7 @@ require 'json'
 
 module DiscourseTranslator
   class Deepl < Base
-    PRO_TRANSLATE_URI = "https://free.deepl.com/v2/translate".freeze
+    PRO_TRANSLATE_URI = "https://api.deepl.com/v2/translate".freeze
     FREE_TRANSLATE_URI = "https://api-free.deepl.com/v2/translate".freeze
     PRO_DETECT_URI = "https://api.deepl.com/v2/translate".freeze
     FREE_DETECT_URI = "https://api-free.deepl.com/v2/translate".freeze
