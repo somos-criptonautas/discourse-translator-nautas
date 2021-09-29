@@ -63,7 +63,6 @@ module DiscourseTranslator
       SUPPORTED_LANG[target]
       # res = result(SUPPORT_URI, target: SUPPORTED_LANG[target])
       # res["languages"].any? { |obj| obj["language"] == source }
-      truef
     end
 
     def self.translate(post)
