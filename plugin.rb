@@ -14,10 +14,11 @@ register_asset "stylesheets/common/post.scss"
 after_initialize do
   module ::DiscourseTranslator
     PLUGIN_NAME = "discourse_translator".freeze
-    if DETECTED_LANG_CUSTOM_FIELD == "ES_xx"
+    if DETECTED_LANG_CUSTOM_FIELD == 'ES_xx'
     DETECTED_LANG_CUSTOM_FIELD = 'ES'
-    end
+    else
     DETECTED_LANG_CUSTOM_FIELD = 'post_detected_lang'.freeze
+    end
     TRANSLATED_CUSTOM_FIELD = 'translated_text'.freeze
 
     autoload :Microsoft, "#{Rails.root}/plugins/discourse-translator/services/discourse_translator/microsoft"
