@@ -11,6 +11,7 @@ es:
     translator_azure_region: "Región de Azure"
     translator_google_api_key: "Clave API de Google"
     translator_yandex_api_key: "Clave API de Yandex"
+    translator_deepl_api_key: "Clave API de Deepl"
     max_characters_per_translation: "El número máximo de caracteres que se pueden enviar para su traducción. Si el contenido es más largo que esto, el texto se truncará. Ten en cuenta que cada proveedor también tiene sus propios límites."
     max_translations_per_minute: "El número de traducciones por minuto que puede realizar un usuario normal."
     translator_libretranslate_endpoint: "Ruta de API de LibreTranslate"
