@@ -13,6 +13,7 @@ discourse_translator:
       - Amazon
       - Yandex
       - LibreTranslate
+      - DeepL
     validator: "DiscourseTranslator::Validators::TranslatorSelectionValidator"
   automatic_translation_target_languages:
     default: ""
@@ -108,6 +109,8 @@ discourse_translator:
   translator_libretranslate_endpoint:
     default: ''
   translator_libretranslate_api_key:
+    default: ''
+  translator_deepl_api_key:
     default: ''
   max_characters_per_translation:
     default: 5000
