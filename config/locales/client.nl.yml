@@ -5,8 +5,14 @@
 # https://translate.discourse.org/
 
 nl:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_translator: "Discourse-vertaler"
   js:
     translator:
       view_translation: "Vertaling weergeven"
       hide_translation: "Vertaling verbergen"
       translated_from: "Vertaald uit het %{language} door %{translator}"
+      translating: "Vertalen"

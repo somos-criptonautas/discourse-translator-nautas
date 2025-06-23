@@ -5,8 +5,14 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_translator: "Traducteur de Discourse"
   js:
     translator:
       view_translation: "Voir la traduction"
       hide_translation: "Masquer la traduction"
       translated_from: "Traduit de la langue originale (%{language}) par %{translator}"
+      translating: "Traduction en cours"
