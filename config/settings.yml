@@ -13,6 +13,28 @@ discourse_translator:
       - Yandex
       - Deepl
       - LibreTranslate
+      - DeepL
+    validator: "DiscourseTranslator::Validators::TranslatorSelectionValidator"
+  automatic_translation_target_languages:
+    default: ""
+    type: list
+    client: true
+    list_type: named
+    allow_any: false
+    choices: "DiscourseTranslator::TranslatableLanguagesSetting.values"
+    validator: "DiscourseTranslator::Validators::TranslatableLanguagesValidator"
+  automatic_translation_backfill_rate:
+    default: 0
+    client: false
+    hidden: true
+  automatic_translation_backfill_limit_to_public_content:
+    default: false
+    client: false
+    hidden: true
+  automatic_translation_backfill_max_age_days:
+    default: 0
+    client: false
+    hidden: true
   translator_azure_subscription_key:
     default: ''
   translator_azure_region:
@@ -89,6 +111,8 @@ discourse_translator:
   translator_libretranslate_endpoint:
     default: ''
   translator_libretranslate_api_key:
+    default: ''
+  translator_deepl_api_key:
     default: ''
   max_characters_per_translation:
     default: 5000
