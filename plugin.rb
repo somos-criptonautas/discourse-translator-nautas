@@ -21,10 +21,11 @@ after_initialize do
     end
     TRANSLATED_CUSTOM_FIELD = 'translated_text'.freeze
 
+    autoload :BaseProvider, "#{Rails.root}/plugins/discourse-translator/app/services/discourse_translator/provider/base"
     autoload :Microsoft, "#{Rails.root}/plugins/discourse-translator/services/discourse_translator/microsoft"
     autoload :Google, "#{Rails.root}/plugins/discourse-translator/services/discourse_translator/google"
     autoload :Yandex, "#{Rails.root}/plugins/discourse-translator/services/discourse_translator/yandex"
-    autoload :Deepl, "#{Rails.root}/plugins/discourse-translator/services/discourse_translator/deepl"
+    autoload :Deepl, "#{Rails.root}/plugins/discourse-translator/app/services/discourse_translator/provider/deepl"
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -62,8 +63,14 @@ after_initialize do
       end
 
       begin
-        detected_lang, translation =
-          "DiscourseTranslator::#{SiteSetting.translator}".constantize.translate(post)
+        detected_lang =
+          "DiscourseTranslator::#{SiteSetting.translator}".constantize.detect_language(post.cooked)
+        translation =
+          "DiscourseTranslator::#{SiteSetting.translator}".constantize.translate(
+            post.cooked,
+            detected_lang,
+            I18n.locale
+          )
         render json: { translation: translation, detected_lang: detected_lang }, status: 200
       rescue ::DiscourseTranslator::TranslatorError => e
         render_json_error e.message, status: 422
@@ -111,7 +118,8 @@ after_initialize do
         return unless post
 
         DistributedMutex.synchronize("detect_translation_#{post.id}") do
-          "DiscourseTranslator::#{SiteSetting.translator}".constantize.detect(post)
+          detected_lang = "DiscourseTranslator::#{SiteSetting.translator}".constantize.detect_language(post.cooked)
+          post.custom_fields[DiscourseTranslator::DETECTED_LANG_CUSTOM_FIELD] = detected_lang
           post.save_custom_fields unless post.custom_fields_clean?
           post.publish_change_to_clients! :revised
         end
