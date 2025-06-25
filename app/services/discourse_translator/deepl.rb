@@ -68,19 +68,6 @@ module DiscourseTranslator
       SiteSetting.translator_deepl_api_key || (raise TranslatorError.new("NotFound: deepl Api Key not set."))
     end
 
-    def self.detect(post)
-      puts "detect"
-      return nil unless translate_supported?('ignored', I18n.locale)
-      puts "GOing to try to detect anyway"
-      r=result(detect_uri,
-          { text: post.cooked.truncate(MAXLENGTH, omission: nil),
-            target_lang: SUPPORTED_LANG[I18n.locale]
-          }
-          )
-      language = r[0]['detected_source_language']
-      puts "Detected language: #{language}"
-      post.custom_fields[DiscourseTranslator::DETECTED_LANG_CUSTOM_FIELD] ||= language          
-    end
 
     def self.broken_translate_supported?(source, target)
       # NOTE: Source is ignored, since we can't know until it's too late
@@ -99,25 +86,28 @@ module DiscourseTranslator
     end
 
     def self.translate_supported?(source, target)
-      return true
-      puts "Checking supported from #{support_uri}"
-      # just ignore the source language since we can't know before it's too late
+      # DeepL API does not require source language to be specified for supported languages check
+      # We only need to check if the target language is supported.
+      # The `type: "target"` parameter ensures we only get languages that can be used as target languages.
       res = result(support_uri, type: "target")
-      puts "translate Got #{res}"
-      #puts "plucked: #{res.pluck(:language)}"
-      target.in?(res.pluck(:language))
+      supported_target_languages = res.map { |lang_info| lang_info["language"] }
+
+      # Convert the Discourse locale to DeepL's format if it exists in SUPPORTED_LANG
+      deepl_target_lang = SUPPORTED_LANG[target.to_sym] || target.to_s.upcase
+
+      supported_target_languages.include?(deepl_target_lang)
+    rescue DiscourseTranslator::TranslatorError => e
+      Rails.logger.warn("DeepL translate_supported? check failed: #{e.message}")
+      false
     end
 
     def self.translate(post)
-      # don't bother with detecting...
-      ok_to_translate = translate_supported?('detected_lang', I18n.locale)
+      ok_to_translate = translate_supported?('ignored', I18n.locale)
       raise I18n.t('translator.failed') unless ok_to_translate
-      detected_lang = detect(post)
 
       translated_text = from_custom_fields(post) do
         res = result(translate_uri,
           text: post.cooked.truncate(MAXLENGTH, omission: nil),
-          #asource_lang: detected_lang,
           tag_handling: "xml",
           target_lang: SUPPORTED_LANG[I18n.locale]
         )
@@ -125,8 +115,11 @@ module DiscourseTranslator
         res[0]["text"]
       end
 
+      # DeepL's translate API response includes 'detected_source_language'
+      detected_lang = res[0]['detected_source_language']
+
       [detected_lang, translated_text]
-    end    
+    end
 
     def self.result(url, body)
       response = Excon.post(url,
