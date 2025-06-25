@@ -92,15 +92,9 @@ module DiscourseTranslator
         puts 'not supported'
         return false
       end
-      
-      res = result(SUPPORT_URI, target: SUPPORTED_LANG[target])
-      res["languages"].any? { |obj| obj["language"] == source }
-      SUPPORTED_LANG[target.to_sym]
     end
 
     def self.translate_supported?(source, target)
-      return true
-      puts "Checking supported from #{support_uri}"
       # just ignore the source language since we can't know before it's too late
       res = result(support_uri, type: "target")
       puts "translate Got #{res}"
