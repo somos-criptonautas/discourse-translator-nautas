@@ -22,14 +22,14 @@ end
 require_relative "lib/discourse_translator/engine"
 
 after_initialize do
-  register_problem_check ProblemCheck::MissingTranslatorApiKey
-  register_problem_check ProblemCheck::TranslatorError
+  # register_problem_check ProblemCheck::MissingTranslatorApiKey
+  # register_problem_check ProblemCheck::TranslatorError
 
-  reloadable_patch do
-    Guardian.prepend(DiscourseTranslator::Extensions::GuardianExtension)
-    Post.prepend(DiscourseTranslator::Extensions::PostExtension)
-    Topic.prepend(DiscourseTranslator::Extensions::TopicExtension)
-  end
+  # reloadable_patch do
+  #   Guardian.prepend(DiscourseTranslator::Extensions::GuardianExtension)
+  #   Post.prepend(DiscourseTranslator::Extensions::PostExtension)
+  #   Topic.prepend(DiscourseTranslator::Extensions::TopicExtension)
+  # end
 
   add_to_serializer :post, :can_translate do
     scope.can_translate?(object)
