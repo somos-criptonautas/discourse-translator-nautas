@@ -74,10 +74,10 @@ module DiscourseTranslator
       puts "supported? T: #{target}--> #{SUPPORTED_LANG[target.to_sym]}. S: #{source}"
       if SUPPORTED_LANG[target.to_sym]
         puts "Supported"
-        return true
+        true
       else
         puts 'not supported'
-        return false
+        false
       end
     end
 
