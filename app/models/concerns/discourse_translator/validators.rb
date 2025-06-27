@@ -7,7 +7,7 @@ module DiscourseTranslator
     class TranslatorSelectionValidator < ActiveModel::EachValidator
       def validate_each(record, attribute, value)
         valid_providers = %w[Microsoft Google Amazon Yandex Deepl LibreTranslate DeepL]
-        unless valid_providers.include?(value)
+        if valid_providers.exclude?(value)
           record.errors.add(attribute, (options[:message] || :invalid_translator_provider))
         end
       end
