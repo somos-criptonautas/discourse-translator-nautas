@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# name: discourse-translator
+# name: discourse-translator-nautas
 # about: Translates posts on Discourse using Microsoft, Google, Yandex, LibreTranslate, or Discourse AI translation APIs.
 # meta_topic_id: 32630
 # version: 0.3.0
@@ -14,7 +14,7 @@ register_asset "stylesheets/common/post.scss"
 register_asset "stylesheets/common/common.scss"
 
 module ::DiscourseTranslator
-  PLUGIN_NAME = "discourse-translator".freeze
+  PLUGIN_NAME = "discourse-translator-nautas".freeze
 
   LANG_DETECT_NEEDED = "lang_detect_needed".freeze
 end
