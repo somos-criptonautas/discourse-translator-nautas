@@ -2,8 +2,6 @@
 
 module DiscourseTranslator
   module Provider
-    extend ActiveSupport::Concern
-
     class TranslatorError < ::StandardError
     end
 
@@ -143,6 +141,10 @@ module DiscourseTranslator
           translatable.title
         end
       end
+    end
+
+    class Base
+      include Provider
     end
   end
 end

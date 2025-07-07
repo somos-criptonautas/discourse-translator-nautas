@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'base'
+require_relative 'base_provider'
 require 'json'
 
 module DiscourseTranslator
-  class Deepl < Base
+  class Deepl < BaseProvider
     PRO_TRANSLATE_URI = "https://api.deepl.com/v2/translate".freeze
     FREE_TRANSLATE_URI = "https://api-free.deepl.com/v2/translate".freeze
     PRO_DETECT_URI = "https://api.deepl.com/v2/translate".freeze
@@ -85,8 +85,10 @@ module DiscourseTranslator
       # DeepL API does not require source language to be specified for supported languages check
       # We only need to check if the target language is supported.
       # The `type: "target"` parameter ensures we only get languages that can be used as target languages.
-      res = result(support_uri, type: "target")
-      supported_target_languages = res.map { |lang_info| lang_info["language"] }
+      supported_target_languages = Discourse.cache.fetch(cache_key) do
+        res = result(support_uri, type: "target")
+        res.map { |lang_info| lang_info["language"] }
+      end
 
       # Convert the Discourse locale to DeepL's format if it exists in SUPPORTED_LANG
       deepl_target_lang = SUPPORTED_LANG[target.to_sym] || target.to_s.upcase
